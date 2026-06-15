@@ -12,6 +12,7 @@ public class CopRunner : MonoBehaviour
     public Rigidbody rigidbody;
     public GameObject AreaA; /*Limite de movimiento*/
     public GameObject AreaB;
+    public GameObject AreaC;
     public Transform currentPoint;
     //public AudioSource audioSource;
     /*void Awake()
@@ -47,7 +48,9 @@ public class CopRunner : MonoBehaviour
     {
         Gizmos.DrawWireSphere(AreaA.transform.position, 0.5f);
         Gizmos.DrawWireSphere(AreaB.transform.position, 0.5f);
+        Gizmos.DrawWireSphere(AreaC.transform.position, 0.5f);
         Gizmos.DrawLine(AreaA.transform.position, AreaB.transform.position);
+        Gizmos.DrawLine(AreaB.transform.position, AreaC.transform.position);
     }
 }
 

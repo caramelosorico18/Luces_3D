@@ -23,6 +23,7 @@ public class Cinematica : MonoBehaviour
 
     [Header("Objetos de la escena")] //Objeto que se mueve durante la cinemática
     public Transform objeto1; //Objeto que se mueve durante la cinemática
+    public Transform puntoIntermedio;
     public Transform destinoObjeto2; //Objeto meta de objeto1
 
     [Header("Configuración de movimiento")]
@@ -68,6 +69,7 @@ public class Cinematica : MonoBehaviour
         //Basado en Vector3Movimiento (Vector3.down) y TiempoDelta
         //objeto1 rota para mirar a destinoObjeto2 mientras la cámara baja
 
+        Debug.Log("Inicio Fase1");
         float duracionFase1 = 5f;
         tiempoTranscurrido = 0f;
 
@@ -94,12 +96,14 @@ public class Cinematica : MonoBehaviour
         //Fase2: CámaraA se fija mirando a objetivo1 (LookAt)
         //LookAt es exactamente lo que hacia MirarHacia en su Update()
 
+        Debug.Log("Inicio Fase2");
         camaraA.transform.LookAt(objeto1);
         yield return new WaitForSeconds(1f);
 
         //Fase3: Objeto1 se traslada hacia objeto2 (TrasladaObjeto)
         //La cámara lo sigue con LookAt en tiempo real
 
+        Debug.Log("Inicio Fase3");
         float duracionFase3 = 4f;
         tiempoTranscurrido = 0f;
 
@@ -119,6 +123,7 @@ public class Cinematica : MonoBehaviour
         //+ slow motion al abrir (EscalarTiempo)
 
         //Oscurece la pantalla(fade out)
+        Debug.Log("Inicio Fase4");
         yield return StartCoroutine(Fade(0f, 1f));
 
         //Cambiamos a cámaraB
@@ -139,7 +144,8 @@ public class Cinematica : MonoBehaviour
         //Vector3Constructor: Posición destino devinida con nuevo Vector3
         //Cambia estos valores en el inspector o haciendolos aqui
 
-        Vector3 posicionFinal = new Vector3(-7.06f, 3f, 1341f);
+        Debug.Log("Inicio Fase5");
+        Vector3 posicionFinal = new Vector3(0f, 1f, 200f);
         float duracionFase5 = 5.5f;
         tiempoTranscurrido = 0f;
         Vector3 origenObjeto2 = destinoObjeto2.position;
