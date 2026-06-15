@@ -26,7 +26,7 @@ public class Cinematica : MonoBehaviour
     public Transform destinoObjeto2; //Objeto meta de objeto1
 
     [Header("Configuración de movimiento")]
-    public float velocidadMovimiento1 = 3f; //Controla la velocidad - equivale a MetroSeg en trasladarObjeto
+    public float velocidadMovimiento1 = 0.1f; //Controla la velocidad - equivale a MetroSeg en trasladarObjeto
     public float escalaSlowMo = 0.3f; //valor del SlowMotion en % de la velocidad real
     public float velocidadFade = 0.5f; //Duración de la transición del fade
 
@@ -68,7 +68,7 @@ public class Cinematica : MonoBehaviour
         //Basado en Vector3Movimiento (Vector3.down) y TiempoDelta
         //objeto1 rota para mirar a destinoObjeto2 mientras la cámara baja
 
-        float duracionFase1 = 2f;
+        float duracionFase1 = 5f;
         tiempoTranscurrido = 0f;
 
         Vector3 posInicioCam = camaraA.transform.position;
@@ -100,7 +100,7 @@ public class Cinematica : MonoBehaviour
         //Fase3: Objeto1 se traslada hacia objeto2 (TrasladaObjeto)
         //La cámara lo sigue con LookAt en tiempo real
 
-        float duracionFase3 = 2f;
+        float duracionFase3 = 4f;
         tiempoTranscurrido = 0f;
 
         Vector3 origenObjeto1 = objeto1.position;
@@ -139,8 +139,8 @@ public class Cinematica : MonoBehaviour
         //Vector3Constructor: Posición destino devinida con nuevo Vector3
         //Cambia estos valores en el inspector o haciendolos aqui
 
-        Vector3 posicionFinal = new Vector3(0f, 0f, 10f);
-        float duracionFase5 = 1.5f;
+        Vector3 posicionFinal = new Vector3(-7.06f, 3f, 1341f);
+        float duracionFase5 = 5.5f;
         tiempoTranscurrido = 0f;
         Vector3 origenObjeto2 = destinoObjeto2.position;
 
