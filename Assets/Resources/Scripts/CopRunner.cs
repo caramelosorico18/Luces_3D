@@ -12,7 +12,6 @@ public class CopRunner : MonoBehaviour
     public Rigidbody rigidbody;
     public GameObject AreaA; /*Limite de movimiento*/
     public GameObject AreaB;
-    public GameObject AreaC;
     public Transform currentPoint;
     //public AudioSource audioSource;
     /*void Awake()
@@ -34,13 +33,13 @@ public class CopRunner : MonoBehaviour
     {
         currentPoint.transform.position = new Vector3(rigidbody.transform.position.x, rigidbody.transform.position.y, rigidbody.transform.position.z);
         /*Vector que resta las posiciones del enemigo y el punto en el que se encuentra para que pueda ir a buscarlo*/
-        if (currentPoint.transform.position.z <= AreaC.transform.position.z + 3f || currentPoint.transform.position.z <= AreaC.transform.position.z + 3f)
+        if (currentPoint.transform.position.z <= AreaB.transform.position.z + 3f || currentPoint.transform.position.z <= AreaB.transform.position.z + 3f)
         {
             rigidbody.velocity = new Vector3(0, 0, speedwalk);
         }
         else
         {
-            rigidbody.transform.position = new Vector3(rigidbody.transform.position.x, rigidbody.transform.position.y, AreaC.transform.position.z + 3f);
+            rigidbody.transform.position = new Vector3(rigidbody.transform.position.x, rigidbody.transform.position.y, AreaB.transform.position.z + 3f);
             Debug.Log("El policia ha llegado al final del recorrido, reseteando su posición");
         }
     }
@@ -48,9 +47,9 @@ public class CopRunner : MonoBehaviour
     {
         Gizmos.DrawWireSphere(AreaA.transform.position, 0.5f);
         Gizmos.DrawWireSphere(AreaB.transform.position, 0.5f);
-        Gizmos.DrawWireSphere(AreaC.transform.position, 0.5f);
+        Gizmos.DrawWireSphere(AreaB.transform.position, 0.5f);
         Gizmos.DrawLine(AreaA.transform.position, AreaB.transform.position);
-        Gizmos.DrawLine(AreaB.transform.position, AreaC.transform.position);
+        Gizmos.DrawLine(AreaB.transform.position, AreaB.transform.position);
     }
 }
 
