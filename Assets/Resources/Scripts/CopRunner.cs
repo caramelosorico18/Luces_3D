@@ -24,7 +24,7 @@ public class CopRunner : MonoBehaviour
     }*/
     void Start()
     {
-        policia = GameObject.FindGameObjectsWithTag("Policia")[3];
+        policia = GameObject.FindGameObjectsWithTag("Policia")[4];
         rigidbody = policia.GetComponent<Rigidbody>();
         speedwalk = 25f;
         currentPoint.position = new Vector3(policia.transform.position.x, policia.transform.position.y, policia.transform.position.z);
@@ -34,14 +34,14 @@ public class CopRunner : MonoBehaviour
     {
         currentPoint.transform.position = new Vector3(rigidbody.transform.position.x, rigidbody.transform.position.y, rigidbody.transform.position.z);
         /*Vector que resta las posiciones del enemigo y el punto en el que se encuentra para que pueda ir a buscarlo*/
-        if (currentPoint.transform.position.z <= AreaB.transform.position.z + 3f)
+        if (currentPoint.transform.position.z <= AreaC.transform.position.z + 3f || currentPoint.transform.position.z <= AreaC.transform.position.z + 3f)
         {
             rigidbody.velocity = new Vector3(0, 0, speedwalk);
         }
         else
         {
-            rigidbody.transform.position = new Vector3(rigidbody.transform.position.x, rigidbody.transform.position.y, AreaA.transform.position.z + 3f);
-            Debug.Log("El policia ha llegado al final del recorrido");
+            rigidbody.transform.position = new Vector3(rigidbody.transform.position.x, rigidbody.transform.position.y, AreaC.transform.position.z + 3f);
+            Debug.Log("El policia ha llegado al final del recorrido, reseteando su posición");
         }
     }
     public void OnDrawGizmos()

@@ -20,6 +20,8 @@ public class Cinematica : MonoBehaviour
     [Header("Cámaras")]
     public Camera camaraA; //camara principal
     public Camera camaraB; //Otra cámara con otro angulo
+    public Camera camaraC;
+    public Camera camaraD;
 
     [Header("Objetos de la escena")] //Objeto que se mueve durante la cinemática
     public Transform objeto1; //Objeto que se mueve durante la cinemática
@@ -38,6 +40,9 @@ public class Cinematica : MonoBehaviour
     {
         camaraA.enabled = true;
         camaraB.enabled = false;
+        camaraC.enabled = false;
+        camaraD.enabled = false;
+
         if (pantallaFade != null)
         {
             pantallaFade.color = new Color(0, 0, 0, 0); //100% trasparente
@@ -125,10 +130,24 @@ public class Cinematica : MonoBehaviour
         //Oscurece la pantalla(fade out)
         Debug.Log("Inicio Fase4");
         yield return StartCoroutine(Fade(0f, 1f));
+        float duracionFase4 = 8f;
+        tiempoTranscurrido = 0f;
+
+
+        while (tiempoTranscurrido < duracionFase4)
+        {
+            //Time.deltaTime equivale al metrosSeg * Time.deltatime de trasladarObjeto
+            tiempoTranscurrido += Time.deltaTime;
+            objeto1.position = Vector3.Lerp(puntoIntermedio, destinoObjeto1, tiempoTranscurrido / duracionFase4);
+            camaraC.transform.LookAt(objeto1); //Mira a objeto1 en tiempo real
+            yield return null;
+        }
 
         //Cambiamos a cámaraB
         camaraA.enabled = false;
         camaraB.enabled = true;
+        camaraC.enabled = false;
+        camaraD.enabled = false;
         camaraB.transform.LookAt(objeto1); //Apuntamos a objeto1
         Time.timeScale = escalaSlowMo; //Activamos slowMo
 
@@ -145,7 +164,7 @@ public class Cinematica : MonoBehaviour
         //Cambia estos valores en el inspector o haciendolos aqui
 
         Debug.Log("Inicio Fase5");
-        Vector3 posicionFinal = new Vector3(0f, 1f, 200f);
+        Vector3 posicionFinal = new Vector3(0f, 1f, 1314f);
         float duracionFase5 = 5.5f;
         tiempoTranscurrido = 0f;
         Vector3 origenObjeto2 = destinoObjeto2.position;
@@ -154,11 +173,57 @@ public class Cinematica : MonoBehaviour
         {
             tiempoTranscurrido += Time.deltaTime;
             destinoObjeto2.position = Vector3.Lerp(origenObjeto2, posicionFinal, tiempoTranscurrido / duracionFase5);
-
+            objeto1.position = Vector3.Lerp(puntoIntermedio.position, destinoObjeto1, tiempoTranscurrido / duracionFase5);
             camaraB.transform.LookAt(destinoObjeto2);
             yield return null;
-
         }
+
+        //Fase6
+        //Se activa cámaraC, la cual es hijo del coche y va a grabar el lateral del coche
+        //Con Slowmo despues de 1 segundo
+
+        Debug.Log("Inicio Fase6");
+        float duracionFase6 = 4f;
+        tiempoTranscurrido = 0f;
+        camaraA.enabled = false;
+        camaraB.enabled = false;
+        camaraC.enabled = true;
+        camaraD.enabled = false;
+        yield return new WaitForSeconds(1f);
+        Time.timeScale = escalaSlowMo;
+        yield return new WaitForSeconds(3f);
+        Time.timeScale = 1f;
+
+
+        //Fase 7
+        //Se activará la cámaraD, la cual se bloquea en el coche y lo verá acercarse
+        Debug.Log("Inicio Fase7");
+        float duracionFase7 = 4f;
+        camaraA.enabled = false;
+        camaraB.enabled = false;
+        camaraC.enabled = false;
+        camaraD.enabled = true;
+        camaraD.transform.LookAt(objeto1);
+        Vector3 posInicioCamD = camaraD.transform.position;
+        Vector3 posFinCamD = posInicioCamD + Vector3.up * 4f;
+
+        while (tiempoTranscurrido < duracionFase1)
+        {
+            tiempoTranscurrido += Time.deltaTime;
+            float t = tiempoTranscurrido / duracionFase1;
+
+
+            camaraA.transform.position = Vector3.Lerp(posInicioCam, posFinCam, t); //Mueve la cámara hacia abajo
+            objeto1.rotation = Quaternion.Slerp(rotInicio, rotFin, t); //objeto1 rota hacia objeto2
+
+            yield return null;
+        }
+
+        //Fase2: CámaraA se fija mirando a objetivo1 (LookAt)
+        //LookAt es exactamente lo que hacia MirarHacia en su Update()
+
+
+
 
         //Fin: Fade a negro, restaura cámara A para el gameplay
         //Time.realTimeSinceStartup = concepto de TiempoPasado
