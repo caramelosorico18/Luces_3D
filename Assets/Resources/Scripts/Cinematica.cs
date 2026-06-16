@@ -20,6 +20,8 @@ public class Cinematica2 : MonoBehaviour
     public Camera camaraA;
     // Arrastra aquí una segunda cámara colocada en otro ángulo de la escena
     public Camera camaraB;
+    public Camera camaraC;
+    public Camera camaraD;
 
     [Header("Objetos de la escena")]
     // Personaje u objeto que se moverá durante la cinemática
@@ -48,6 +50,8 @@ public class Cinematica2 : MonoBehaviour
         // Al iniciar: solo camaraA visible, camaraB apagada
         camaraA.enabled = true;
         camaraB.enabled = false;
+        camaraC.enabled = false;
+        camaraD.enabled = false;
 
         // Asegura que el fade empieza transparente
         if (pantallaFade != null)
@@ -83,6 +87,8 @@ public class Cinematica2 : MonoBehaviour
         // Basado en Vector3Movimiento (Vector3.down) y TiempoDelta
         // objeto1 rota para mirar a destinoObjeto2 mientras la cámara baja
         // ─────────────────────────────────────────
+        Debug.Log("Inicio de fase 1");
+
         float duracionFase1 = 2f;
         tiempoTranscurrido = 0f;
 
@@ -115,6 +121,8 @@ public class Cinematica2 : MonoBehaviour
         // FASE 2: CámaraA se fija mirando a objeto1 (MirarHacia)
         // LookAt es exactamente lo que hace MirarHacia en su Update()
         // ─────────────────────────────────────────
+        Debug.Log("Inicio de fase 2");
+
         camaraA.transform.LookAt(objeto1);
         yield return new WaitForSeconds(1f);
 
@@ -122,6 +130,8 @@ public class Cinematica2 : MonoBehaviour
         // FASE 3: objeto1 se traslada hacia objeto2 (TrasladarObjeto)
         // La cámara lo sigue con LookAt en tiempo real
         // ─────────────────────────────────────────
+        Debug.Log("Inicio de fase 3");
+
         float duracionFase3 = 2f;
         tiempoTranscurrido = 0f;
 
@@ -143,6 +153,7 @@ public class Cinematica2 : MonoBehaviour
         // FASE 4: Fade a negro → cambio a CámaraB → Fade de vuelta
         // + slow motion al abrir (EscalarTiempo)
         // ─────────────────────────────────────────
+        Debug.Log("Inicio de fase 4");
 
         // Oscurece la pantalla (fade out)
         yield return StartCoroutine(Fade(0f, 1f));
@@ -171,6 +182,7 @@ public class Cinematica2 : MonoBehaviour
         // FASE 5: objeto2 se mueve a posición final (Vector3Constructor)
         // CámaraB lo sigue con LookAt
         // ─────────────────────────────────────────
+        Debug.Log("Inicio de fase 5");
 
         // Vector3Constructor: posición destino definida con new Vector3
         // Cambia estos valores en el Inspector o hardcodéalos aquí
@@ -190,7 +202,10 @@ public class Cinematica2 : MonoBehaviour
             yield return null;
         }
 
-        //Fase6
+        //Fase6, la camaraC se enciende y se acopla al coche
+        Debug.Log("Inicio de fase 6");
+        camaraB.enabled = false;
+        camaraC.enabled = true;
         float duracionFase6 = 3f;
         tiempoTranscurrido = 0f;
         //Se añade velocidad al coche para que siga moviendose
@@ -198,20 +213,46 @@ public class Cinematica2 : MonoBehaviour
         {
             // Time.deltaTime equivale al metrosSeg * Time.deltaTime de TrasladarObjeto
             tiempoTranscurrido += Time.deltaTime;
-            objeto1.position = Vector3.Lerp(origenObjeto1, destinoObjeto1, tiempoTranscurrido / duracionFase3);
+            objeto1.position = Vector3.Lerp(origenObjeto1, posicionFinal, tiempoTranscurrido / duracionFase6);
 
-            // MirarHacia en tiempo real: la cámara nunca pierde de vista a objeto1
-            camaraA.transform.LookAt(objeto1);
             yield return null;
         }
 
         while (tiempoTranscurrido < duracionFase6)
         {
             tiempoTranscurrido += Time.deltaTime;
-            destinoObjeto2.position = Vector3.Lerp(origenObjeto2, posicionFinal, tiempoTranscurrido / duracionFase5);
+            destinoObjeto2.position = Vector3.Lerp(origenObjeto2, posicionFinal, tiempoTranscurrido / duracionFase6);
 
             // CámaraB sigue a objeto2 mientras se mueve (MirarHacia)
             camaraB.transform.LookAt(destinoObjeto2);
+            yield return null;
+        }
+
+        //Fase7, la cámara ve como se acerca el coche
+        Debug.Log("Inicio de fase 7");
+        posicionFinal = new Vector3(0f, 0f, 1500f);
+        float duracionFase7 = 3f;
+        camaraC.enabled = false;
+        camaraD.enabled = true;
+        camaraD.transform.LookAt(objeto1);
+        yield return new WaitForSeconds(1f);
+
+        while (tiempoTranscurrido < duracionFase7)
+        {
+            tiempoTranscurrido += Time.deltaTime;
+            destinoObjeto2.position = Vector3.Lerp(origenObjeto2, posicionFinal, tiempoTranscurrido / duracionFase7);
+
+            // CámaraB sigue a objeto2 mientras se mueve (MirarHacia)
+            camaraD.transform.LookAt(destinoObjeto2);
+            yield return null;
+        }
+
+        while (tiempoTranscurrido < duracionFase7)
+        {
+            // Time.deltaTime equivale al metrosSeg * Time.deltaTime de TrasladarObjeto
+            tiempoTranscurrido += Time.deltaTime;
+            objeto1.position = Vector3.Lerp(origenObjeto1, posicionFinal, tiempoTranscurrido / duracionFase7);
+
             yield return null;
         }
 
@@ -224,6 +265,7 @@ public class Cinematica2 : MonoBehaviour
 
         camaraB.enabled = false;
         camaraA.enabled = true;
+        tiempoTranscurrido = 0f;
 
         yield return StartCoroutine(Fade(1f, 0f));
 
