@@ -198,7 +198,7 @@ public class Cinematica2 : MonoBehaviour
             destinoObjeto2.position = Vector3.Lerp(origenObjeto2, posicionFinal, tiempoTranscurrido / duracionFase5);
 
             // CámaraB sigue a objeto2 mientras se mueve (MirarHacia)
-            camaraB.transform.LookAt(destinoObjeto2);
+            camaraB.transform.LookAt(objeto1);
             yield return null;
         }
 
